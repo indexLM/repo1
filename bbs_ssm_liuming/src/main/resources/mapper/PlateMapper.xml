@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lm.dao.PlateMapper">
+    <resultMap id="BaseResultMap" type="com.lm.bean.Plate">
+        <id column="bid" jdbcType="INTEGER" property="bid"/>
+        <result column="bname" jdbcType="VARCHAR" property="bname"/>
+        <result column="btime" jdbcType="TIMESTAMP" property="btime"/>
+    </resultMap>
+
+    <!-- 查询板块的所有信息 -->
+    <select id="selectAll" parameterType="com.lm.bean.Plate" resultMap="BaseResultMap">
+    select 
+    bid, bname, btime
+    from plate
+  </select>
+
+    <!-- 按板块名查询 -->
+    <select id="selectByAdminName" parameterType="com.lm.bean.Plate" resultMap="BaseResultMap">
+    select 
+    bid, bname, btime
+    from plate
+    where bname = #{bname,jdbcType=VARCHAR}
+  </select>
+    <!-- 按板块id查询 -->
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    bid, bname, btime
+    from plate
+    where bid = #{bid,jdbcType=INTEGER}
+  </select>
+
+    <!-- 按bid删除板块信息 -->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from plate
+    where bid = #{bid,jdbcType=INTEGER}
+    </delete>
+    <!--板块插入-->
+    <insert id="insert" parameterType="com.lm.bean.Plate">
+    insert into plate (bid, bname, btime
+      )
+    values (#{bid,jdbcType=INTEGER}, #{bname,jdbcType=VARCHAR}, #{btime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+
+    <!-- 修改板块 -->
+    <update id="updateByPrimaryKey" parameterType="com.lm.bean.Plate">
+    update plate
+    set bname = #{bname,jdbcType=VARCHAR}
+    where bid = #{bid,jdbcType=INTEGER}
+  </update>
+</mapper>

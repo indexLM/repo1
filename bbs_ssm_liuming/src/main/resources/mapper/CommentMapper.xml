@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lm.dao.CommentMapper">
+  <resultMap id="BaseResultMap" type="com.lm.bean.Comment">
+    <id column="pid" jdbcType="INTEGER" property="pid" />
+    <result column="pcontent" jdbcType="VARCHAR" property="pcontent" />
+    <result column="userid" jdbcType="INTEGER" property="userid" />
+    <result column="fid" jdbcType="INTEGER" property="fid" />
+    <result column="time" jdbcType="TIMESTAMP" property="time" />
+  </resultMap>
+  
+  <!-- 按帖子id（fid）查询评论表信息（并通过userid查询出name）
+  		先查询出参与过评论的所有人，然后再按评论表的fid查询 -->
+  <select id="selectByCommentFid" parameterType="com.lm.bean.Comment" resultMap="BaseResultMap">
+    select 
+    c.pid, c.pcontent, c.userid, c.fid, c.time,u.name
+    from comment c,user u
+    where u.userid = c.userid
+    and fid=#{fid,jdbcType=INTEGER}
+  </select>
+  
+  <!-- 按用户id（userid）查询评论表的fid信息（去重） -->
+  <select id="selectByCommentUserid" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    pid, pcontent, userid, fid, time
+    from comment
+    where userid = #{userid,jdbcType=INTEGER}
+    GROUP BY fid
+  </select>
+  
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    pid, pcontent, userid, fid, time
+    from comment
+    where pid = #{pid,jdbcType=INTEGER}
+  </select>
+  
+  <!-- 按pid删除评论表 -->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from comment
+    where pid = #{pid,jdbcType=INTEGER}
+  </delete>
+  
+  <!-- 删除该用户对应的所有评论信息(按userid) -->
+  <delete id="deleteByUserid" parameterType="java.lang.Integer">
+    delete from comment
+    where userid = #{userid,jdbcType=INTEGER}
+  </delete>
+  
+  <!-- 添加评论 -->
+  <insert id="insert" parameterType="com.lm.bean.Comment">
+    insert into 
+    comment (pid, pcontent, userid, fid, time)
+    values (#{pid,jdbcType=INTEGER}, #{pcontent,jdbcType=VARCHAR}, #{userid,jdbcType=INTEGER}, 
+      #{fid,jdbcType=INTEGER}, #{time,jdbcType=TIMESTAMP})
+  </insert>
+  
+
+  <update id="updateByPrimaryKey" parameterType="com.lm.bean.Comment">
+    update comment
+    set pcontent = #{pcontent,jdbcType=VARCHAR},
+      userid = #{userid,jdbcType=INTEGER},
+      fid = #{fid,jdbcType=INTEGER},
+      time = #{time,jdbcType=TIMESTAMP}
+    where pid = #{pid,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lm.dao.ViaMapper">
+  <resultMap id="BaseResultMap" type="com.lm.bean.Via">
+    <id column="userid" jdbcType="INTEGER" property="userid" />
+    <result column="photo" jdbcType="VARCHAR" property="photo" />
+  </resultMap>
+  
+  <!-- 按userid查询用户信息 -->
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+       userid, photo
+    from  via
+    where userid = #{userid,jdbcType=INTEGER}
+  </select>
+  
+  <!-- 删除用户对应的头像信息 -->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from via
+    where userid = #{userid,jdbcType=INTEGER}
+  </delete>
+  
+  <!-- 上传用户头像（插入） -->
+  <insert id="insert" parameterType="com.lm.bean.Via">
+    insert into via (userid, photo)
+    values (#{userid,jdbcType=INTEGER}, #{photo,jdbcType=VARCHAR})
+  </insert>
+
+  <!-- 按userid修改用户头像信息（via） -->
+  <update id="updateByPrimaryKey" parameterType="com.lm.bean.Via">
+    update via
+    set photo = #{photo,jdbcType=VARCHAR}
+    where userid = #{userid,jdbcType=INTEGER}
+  </update>
+</mapper>
